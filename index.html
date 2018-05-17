@@ -1,15 +1,113 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Allmeta</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+    <meta charset="utf-8">
+    <title>Ripples with Three.js</title>
+    <style media="screen">
+        body {
+            margin: 0;
+            overflow: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: -moz-none;
+            -ms-user-select: none;
+            user-select: none;
+
+        }
+
+        canvas {
+            position: absolute;
+            overflow: hidden;
+            background: #263238;
+        }
+    </style>
+    <script type="text/javascript">
+        let canvas,
+            context,
+            width,
+            height,
+            scene,
+            camera,
+            renderer,
+            maxScale,
+            rate,
+            geometry,
+            circles = []
+    </script>
 </head>
+
 <body>
-    <h1>Hi there</h1>
-    <h1>This is a test ok thanks</h1>
 </body>
+<script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
+<script type="text/javascript">
+    class Circle {
+        constructor(x, y) {
+            this.makeObject(x, y)
+            this.scale = 1
+        }
+        update() {
+            this.scale += rate
+            if (this.scale > maxScale) {
+                scene.remove(this.object)
+            }
+            this.object.material.opacity=1-this.scale/maxScale
+            this.object.material.color.setHSL(this.scale / maxScale, 1, .5)
+            this.object.scale.set(this.scale, this.scale, 1)
+
+        }
+        makeObject(x, y) {
+            let material = new THREE.LineBasicMaterial({opacity:1.0,transparent:true});
+            this.object = new THREE.Line(geometry, material)
+            this.object.position.set(x, height - y, 0)
+            scene.add(this.object)
+        }
+    }
+
+    function init() {
+        width = window.innerWidth
+        height = window.innerHeight
+        scene = new THREE.Scene()
+        camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000)
+        renderer = new THREE.WebGLRenderer({ antialias: true })
+        camera.up = new THREE.Vector3(0, 0, -1);
+
+        //other init
+        rate = 5
+        maxScale = 200
+        var resolution = 100;
+        var amplitude = 1;
+        var size = 360 / resolution;
+
+        geometry = new THREE.Geometry();
+        for (var i = 0; i <= resolution; i++) {
+            var segment = (i * size) * Math.PI / 180;
+            geometry.vertices.push(new THREE.Vector3(Math.cos(segment) * amplitude, Math.sin(segment) * amplitude,0));
+        }
+
+        //webgl INIT
+        camera.position.set(width / 2, height / 2, 100)
+        renderer.setSize(width, height)
+        scene.background = new THREE.Color(0x263238)
+        document.body.appendChild(renderer.domElement)
+
+        //add event listeners
+        window.addEventListener('mousemove', function (event) {
+            addCircle(event.clientX, event.clientY)
+        }, false);
+        requestAnimationFrame(update)
+    }
+    function addCircle(x, y) {
+        circles.push(new Circle(x, y))
+    }
+
+    function update() {
+        circles.forEach(o => o.update())
+        renderer.render(scene, camera);
+
+        requestAnimationFrame(update)
+    }
+    init()
+
+</script>
+
 </html>
