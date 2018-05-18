@@ -32,6 +32,9 @@
             maxScale,
             rate,
             geometry,
+            then,
+            now,
+            delta,
             circles = []
     </script>
 </head>
@@ -46,7 +49,7 @@
             this.scale = 1
         }
         update() {
-            this.scale += rate
+            this.scale += rate*delta/15
             if (this.scale > maxScale) {
                 scene.remove(this.object)
             }
@@ -94,6 +97,9 @@
         window.addEventListener('mousemove', function (event) {
             addCircle(event.clientX, event.clientY)
         }, false);
+
+        //update
+        then=Date.now()
         requestAnimationFrame(update)
     }
     function addCircle(x, y) {
@@ -101,6 +107,9 @@
     }
 
     function update() {
+        now=Date.now()
+        delta=now-then
+        then=now
         circles.forEach(o => o.update())
         renderer.render(scene, camera);
 
