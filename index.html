@@ -20,8 +20,16 @@
             overflow: hidden;
             background: #263238;
         }
+
+        #container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 100;
+        }
     </style>
     <script type="text/javascript">
+        // def global vars
         let canvas,
             context,
             width,
@@ -29,19 +37,20 @@
             scene,
             camera,
             renderer,
-            maxScale,
-            rate,
-            geometry,
             then,
             now,
             delta,
-            circles = []
+            gui,
+            handler,
+            shapes
     </script>
 </head>
 
 <body>
+    <div id="container"></div>
 </body>
 <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
+<script type="text/javascript" src="dat.gui.min.js"></script>
 <script type="text/javascript">
     class Circle {
         constructor(x, y) {
@@ -49,20 +58,38 @@
             this.scale = 1
         }
         update() {
-            this.scale += rate*delta/15
-            if (this.scale > maxScale) {
+            this.scale += handler.speed * delta / 17
+            if (this.scale > handler.maxSize) {
                 scene.remove(this.object)
             }
-            this.object.material.opacity=1-this.scale/maxScale
-            this.object.material.color.setHSL(this.scale / maxScale, 1, .5)
+            this.object.material.opacity = 1 - this.scale / handler.maxSize
+            this.object.material.color.setHSL(this.scale / handler.maxSize * (handler.colorEnd - handler.colorStart) / 360 + handler.colorStart, 1, .5)
             this.object.scale.set(this.scale, this.scale, 1)
 
         }
         makeObject(x, y) {
-            let material = new THREE.LineBasicMaterial({opacity:1.0,transparent:true});
-            this.object = new THREE.Line(geometry, material)
+            let material = new THREE.LineBasicMaterial({ opacity: 1.0, transparent: true });
+            this.object = new THREE.Line(handler.shapes[handler.shape], material)
             this.object.position.set(x, height - y, 0)
             scene.add(this.object)
+        }
+    }
+    class Handler {
+        constructor(rate, maxScale, shape, colorStart, colorEnd) {
+            this.circles = []
+            this.shapes = {}
+            this.shape = shape
+            this.speed = rate
+            this.maxSize = maxScale
+            this.colorStart = colorStart
+            this.colorEnd = colorEnd
+            this.background = "#263238"
+        }
+        addCircle(x, y) {
+            this.circles.push(new Circle(x, y))
+        }
+        addShape(name, shape) {
+            this.shapes[name] = shape
         }
     }
 
@@ -74,43 +101,103 @@
         renderer = new THREE.WebGLRenderer({ antialias: true })
         camera.up = new THREE.Vector3(0, 0, -1);
 
-        //other init
-        rate = 5
-        maxScale = 200
-        var resolution = 100;
-        var amplitude = 1;
-        var size = 360 / resolution;
-
-        geometry = new THREE.Geometry();
-        for (var i = 0; i <= resolution; i++) {
-            var segment = (i * size) * Math.PI / 180;
-            geometry.vertices.push(new THREE.Vector3(Math.cos(segment) * amplitude, Math.sin(segment) * amplitude,0));
-        }
-
         //webgl INIT
         camera.position.set(width / 2, height / 2, 100)
         renderer.setSize(width, height)
         scene.background = new THREE.Color(0x263238)
         document.body.appendChild(renderer.domElement)
 
+        //Circle shape
+        let resolution = 100;
+        let amplitude = 1;
+        let size = 360 / resolution;
+
+        let circle = new THREE.Geometry();
+        for (let i = 0; i <= resolution; i++) {
+            var segment = (i * size) * Math.PI / 180;
+            circle.vertices.push(new THREE.Vector3(Math.cos(segment) * amplitude, Math.sin(segment) * amplitude, 0));
+        }
+        circle.normalize()
+
+        //square
+        let square = new THREE.Geometry();
+        square.vertices.push(
+            new THREE.Vector3(-1, -1, 0),
+            new THREE.Vector3(-1, 1, 0),
+            new THREE.Vector3(1, 1, 0),
+            new THREE.Vector3(1, -1, 0),
+            new THREE.Vector3(-1, -1, 0))
+
+        square.normalize()
+
+        //heart
+        let x = 0, y = 0;
+
+        let heartShape = new THREE.Shape();
+
+        heartShape.moveTo(x + 5, y + 5);
+        heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
+        heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
+        heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
+        heartShape.bezierCurveTo(x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7);
+        heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
+        heartShape.bezierCurveTo(x + 7, y, x + 5, y + 5, x + 5, y + 5);
+
+        let heart = new THREE.ShapeGeometry(heartShape);
+        heart.normalize()
+        heart.rotateZ(Math.PI)
+
+        //triangle
+        let triangle = new THREE.Geometry();
+        triangle.vertices.push(
+            new THREE.Vector3(-1, 1, 0),
+            new THREE.Vector3(1, 1, 0),
+            new THREE.Vector3(0, -.73, 0),
+            new THREE.Vector3(-1, 1, 0))
+        triangle.normalize()
+        triangle.rotateZ(Math.PI)
+
+        //edge detection on image??? owo
+
+        //handler   
+        handler = new Handler(5, 200, 'circle', 0, 360)
+        handler.addShape('circle', circle)
+        handler.addShape('square', square)
+        handler.addShape('heart', heart)
+        handler.addShape('triangle', triangle)
+
+        //gui
+        gui = new dat.GUI({ name: 'Tweaks', autoPlace: false })
+        document.getElementById('container').appendChild(gui.domElement)
+
+        gui.add(handler, 'speed', 0, 10)
+        gui.add(handler, 'maxSize', 50, 500)
+        gui.add(handler, 'colorStart', 0, 360)
+        gui.add(handler, 'colorEnd', 0, 360)
+        let sceneBg = gui.addColor(handler, 'background')
+        gui.add(handler, 'shape', Object.keys(handler.shapes))
+
+        sceneBg.onChange((value) => {
+            value = value.replace("#", "0x")
+            scene.background.setHex(value)
+        })
+
+
         //add event listeners
         window.addEventListener('mousemove', function (event) {
-            addCircle(event.clientX, event.clientY)
+            handler.addCircle(event.clientX, event.clientY)
         }, false);
 
         //update
-        then=Date.now()
+        then = Date.now()
         requestAnimationFrame(update)
-    }
-    function addCircle(x, y) {
-        circles.push(new Circle(x, y))
     }
 
     function update() {
-        now=Date.now()
-        delta=now-then
-        then=now
-        circles.forEach(o => o.update())
+        now = Date.now()
+        delta = now - then
+        then = now
+        handler.circles.forEach(o => o.update())
         renderer.render(scene, camera);
 
         requestAnimationFrame(update)
