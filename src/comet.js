@@ -1,7 +1,7 @@
 class Comet {
-    constructor() {
-        this.launched=false
-        this.index = comets.length - 1
+    constructor(id) {
+        this.launched = false
+        this.index = id
         this.angle = Math.random() * Math.PI * 2
         this.x = width / 2 + width / 2 * Math.sin(this.angle)
         this.y = height / 2 + width / 2 * Math.cos(this.angle)
@@ -15,7 +15,7 @@ class Comet {
 
         this.size = Math.random() * 80 + 20
 
-        this.mesh = new THREE.Mesh(new THREE.CircleGeometry(this.size, 3),
+        this.mesh = new THREE.Mesh(new THREE.CircleGeometry(this.size, 5),
             new THREE.MeshBasicMaterial({
                 color:
                     new THREE.Color("hsl(" + Math.floor(360 * Math.random()) + ',' +
@@ -27,11 +27,6 @@ class Comet {
         this.mesh.renderOrder = -1
     }
     update() {
-        let g = gravitate(this.size, hole.size, distanceTo(this.x, this.y, hole.x, hole.y)) / 10,
-            a = angleTo(this.x, this.y, hole.x, hole.y);
-        this.ax = Math.cos(a) * g
-        this.ay = Math.sin(a) * g
-
         this.vx += this.ax
         this.vy += this.ay
 
@@ -41,15 +36,15 @@ class Comet {
         if (isIn(this, hole)) {
             hole.eat(this)
         }
-        if(this.launched&&(this.x<0||this.x>width||this.y>height||this.y<0)){
-            comets.splice(this.index,1)
+        if (this.launched && outOfBounds(this)) {
+            delete comets[this.index]
             scene.remove(this.mesh)
         }
 
         this.mesh.position.set(this.x, this.y, 0)
     }
     launch(angle, speed) {
-        this.launched=true
+        this.launched = true
         this.vx += speed * Math.cos(angle)
         this.vy += speed * Math.sin(angle)
     }

@@ -6,7 +6,7 @@
     <title>I Can Fly in The Universe</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Indie+Flower" rel="stylesheet"> 
     <style>
         body {
             margin: 0;
@@ -19,20 +19,48 @@
             transform: scaleY(-1);
         }
 
-        h1 {
-            font-family: 'Bangers';
+        #score{
+            font-family: 'Indie Flower';
             position: fixed;
             bottom: 50px;
             right:200px;
             font-size:500%;
             z-index:3;
-            color:white;
+            color:pink;
+            text-align: center;
+            
+            transition:right 1s, bottom 1s;
+        }
+        .done{
+            bottom:50vh;
+            right:25vw;
+            font-size:300%;
+            font-family: "Amatic SC";
+        }
+        #restart{
+            font-family: "Amatic SC";
+            background:peachpuff;
+            color:teal;
+            border-radius:50%;
+            border:none;
+            transition: border-radius .5s;
+            position: fixed;
+            font-size:500%;
+            left:45vw;
+            top:50vh;
+
+        }
+        #restart:hover{
+            cursor:pointer;
+            border-radius:25%;
+            text-shadow: 2px 2px 4px #000000 inset;
+            box-shadow: 5px 5px 10px black;
         }
     </style>
     <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
     <script>
-        let width, height, scene, camera, renderer, Key, Mouse,score;
-        let hole, comets = [], planets = [], player;
+        let width, height, scene, camera, renderer, Key, Mouse,score,gameOver,cometTimeout,deaths;
+        let hole, comets, planets, player;
     </script>
 </head>
 

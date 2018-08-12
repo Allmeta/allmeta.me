@@ -16,10 +16,14 @@ class Hole {
     update() {
         this.mesh.rotateZ(this.it)
     }
-    eat(comet) {
+    eat(comet) {        
         this.size += Math.sqrt(comet.size / Math.PI)
+        scene.children[0]
+        delete comets[comet.index]
         scene.remove(comet.mesh)
-        comets.splice(comet.index, 1)
-        this.mesh.scale.set(this.size / this.firstSize, this.size / this.firstSize, 0)
+        this.mesh.scale.set(this.size / this.firstSize, this.size / this.firstSize, 1)
+        if(player && player.joint==comet.index){            
+            player.gameOver()
+        }
     }
 }

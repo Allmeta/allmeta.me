@@ -7,7 +7,8 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true })
     camera.up = new THREE.Vector3(0, 0, -1);
 
-    score=document.getElementById("score")
+    score = document.getElementById("score")
+    deaths = 0
 
     //webgl INIT
     camera.position.set(width / 2, height / 2, 100)
@@ -45,8 +46,19 @@ function init() {
     window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
     window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
 
+    start()
+}
+function start() {
+    gameOver = false
+
+    planets = []
+    comets = {}
 
     //player, planets, comets, hole
+    while (scene.children.length > 0) {
+        scene.remove(scene.children[scene.children.length - 1]);
+    }
+
     player = new Player()
     player.mesh.renderOrder = 10
     hole = new Hole()
@@ -54,23 +66,25 @@ function init() {
     planets.push(new Planet())
     planets.push(new Planet())
 
-    setTimeout(spawnComet, 3000)
+    cometTimeout = setTimeout(spawnComet, 3000)
 
-    requestAnimationFrame(update)
-
+    if (deaths == 0) requestAnimationFrame(update)
 }
 function update() {
-    player.update()
+    if (!gameOver) {
+        player.update()
+    }
+    for (let i in comets) {
+        comets[i].update()
+    }
     planets.forEach(o => o.update())
-    comets.forEach(o => o.update())
     hole.update()
-
-
 
     renderer.render(scene, camera)
     requestAnimationFrame(update)
 }
 function spawnComet() {
-    comets.push(new Comet())
-    setTimeout(spawnComet, 7000)
+    let k = new Date().getTime()
+    comets[k] = new Comet(k)
+    cometTimeout = setTimeout(spawnComet, 5000)
 }

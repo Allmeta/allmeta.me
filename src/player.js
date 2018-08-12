@@ -3,7 +3,8 @@ class Player {
         this.x = width / 4 * 3
         this.y = height / 2
 
-        this.joint = { node: null, angle: 0 }
+        this.joint =null
+        this.lastJoint=null
 
         this.vx = 0
         this.vy = 0
@@ -31,9 +32,14 @@ class Player {
         this.x += this.vx
         this.y += this.vy
 
-        if (this.joint.node && !this.inAir) {
-            this.x = this.joint.node.x
-            this.y = this.joint.node.y
+        if (this.joint && !this.inAir) {
+            if(this.joint>100){
+                this.x = comets[this.joint].x
+                this.y = comets[this.joint].y
+            }else{
+                this.x = planets[this.joint].x
+                this.y = planets[this.joint].y
+            }
         }
 
         this.angle = Math.atan2(Mouse.y - this.y, Mouse.x - this.x)
@@ -42,25 +48,26 @@ class Player {
         this.mesh.rotation.set(0, 0, this.angle)
 
         if (this.inAir) {
-            for (let i of planets) {
-                if (i == this.joint.node) continue;
-                if (isIn(this, i)) {
-                    //set to side of thing ty
+            for (let i in planets) {
+                if (i == this.lastJoint) continue;
+                if (isIn(this, planets[i])) {
                     this.inAir = false
                     this.vx = 0
                     this.vy = 0
-                    this.joint.node = i
-                    // this.joint.angle=angleTo(this.x,this.y,i.x,i.y)
+                    this.joint = i
                 }
             }
-            for (let i of comets) {
-                if (i == this.joint.node) continue;
-                if (isIn(this, i)) {
+            for (let i in comets) {
+                if (i == this.lastJoint) continue;
+                if (isIn(this, comets[i])) {
                     this.inAir = false
                     this.vx = 0
                     this.vy = 0
-                    this.joint.node = i
+                    this.joint = i
                 }
+            }
+            if((outOfBounds(this))){
+                this.gameOver()
             }
         }
 
@@ -68,18 +75,40 @@ class Player {
     }
     launch() {
         if (this.inAir) return
-        if (this.joint.node instanceof Comet) {
+        if (comets[this.joint] instanceof Comet) {
             //launch comet away
-            this.joint.node.launch(this.angle - Math.PI, this.launchSpeed)
+            comets[this.joint].launch(this.angle - Math.PI, this.launchSpeed)
             this.score+=1
             score.innerHTML=this.score
         }
+        this.lastJoint=this.joint
         this.inAir = true
         this.vx = Math.cos(this.angle) * this.launchSpeed
         this.vy = Math.sin(this.angle) * this.launchSpeed
         this.ax=Math.cos(this.angle)*0.1
         this.ay=Math.sin(this.angle)*0.1
 
+    }
+    gameOver(){
+        deaths++
+        gameOver=true
+        scene.remove(this.mesh)
+        player=null
+        clearTimeout(cometTimeout)
+        score.className="done"
+        score.innerHTML="You saved %c% comets before flying into the void.".replace("%c%",this.score)
+
+        let btn=document.createElement("button");
+        btn.innerHTML="Retry?"
+        btn.id="restart"
+        document.body.appendChild(btn)
+        btn.onclick=()=>{
+            score.className=""
+            document.body.removeChild(btn)
+            score.innerHTML="0"
+            start()
+        }
+        
     }
 
 }
