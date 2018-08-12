@@ -7,6 +7,8 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true })
     camera.up = new THREE.Vector3(0, 0, -1);
 
+    score=document.getElementById("score")
+
     //webgl INIT
     camera.position.set(width / 2, height / 2, 100)
     renderer.setSize(width, height)

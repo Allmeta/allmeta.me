@@ -17,6 +17,8 @@ class Player {
         this.angle = 0
         this.inAir = false
 
+        this.score=0
+
         this.mesh = new THREE.Mesh(
             new THREE.CircleGeometry(this.size, 3),
             new THREE.MeshBasicMaterial({ color: 0x33b1da }))
@@ -69,10 +71,14 @@ class Player {
         if (this.joint.node instanceof Comet) {
             //launch comet away
             this.joint.node.launch(this.angle - Math.PI, this.launchSpeed)
+            this.score+=1
+            score.innerHTML=this.score
         }
         this.inAir = true
         this.vx = Math.cos(this.angle) * this.launchSpeed
         this.vy = Math.sin(this.angle) * this.launchSpeed
+        this.ax=Math.cos(this.angle)*0.1
+        this.ay=Math.sin(this.angle)*0.1
 
     }
 

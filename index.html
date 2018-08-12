@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>I Can Fly in The Universe</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>I Can Fly in The Universe</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet"> 
+    <style>
         body {
             margin: 0;
             overflow: hidden;
@@ -13,22 +15,35 @@
 
         canvas {
             position: absolute;
-            
+
             transform: scaleY(-1);
         }
-        </style>
-        <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
-        <script>
-            let width, height, scene, camera, renderer,Key,Mouse;
-            let hole, comets=[],planets=[], player;
-        </script>
-    </head>
-    <body>
-    </body>
-    <script src="src/util.js"></script>
-    <script src="src/player.js"></script>
-    <script src="src/planet.js"></script>
-    <script src="src/hole.js"></script>
-    <script src="src/comet.js"></script>
-    <script src="src/main.js"></script>    
+
+        h1 {
+            font-family: 'Bangers';
+            position: fixed;
+            bottom: 50px;
+            right:200px;
+            font-size:500%;
+            z-index:3;
+            color:white;
+        }
+    </style>
+    <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
+    <script>
+        let width, height, scene, camera, renderer, Key, Mouse,score;
+        let hole, comets = [], planets = [], player;
+    </script>
+</head>
+
+<body>
+    <h1 id="score">0</h1>
+</body>
+<script src="src/util.js"></script>
+<script src="src/player.js"></script>
+<script src="src/planet.js"></script>
+<script src="src/hole.js"></script>
+<script src="src/comet.js"></script>
+<script src="src/main.js"></script>
+
 </html>
