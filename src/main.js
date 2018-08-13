@@ -53,6 +53,7 @@ function start() {
 
     planets = []
     comets = {}
+    trails={}
 
     //player, planets, comets, hole
     while (scene.children.length > 0) {
@@ -77,6 +78,11 @@ function update() {
     for (let i in comets) {
         comets[i].update()
     }
+    for (let i in trails) {
+        for(let j in trails[i]){
+            trails[i][j].update()
+        }
+    }
     planets.forEach(o => o.update())
     hole.update()
 
@@ -84,7 +90,7 @@ function update() {
     requestAnimationFrame(update)
 }
 function spawnComet() {
-    let k = new Date().getTime()
+    let k = new Date().getTime();
     comets[k] = new Comet(k)
     cometTimeout = setTimeout(spawnComet, 5000)
 }

@@ -42,7 +42,7 @@ class Player {
             }
         }
 
-        this.angle = Math.atan2(Mouse.y - this.y, Mouse.x - this.x)
+        this.angle = angleTo(this.x,this.y,Mouse.x,Mouse.y)
 
         this.mesh.position.set(this.x, this.y, 0)
         this.mesh.rotation.set(0, 0, this.angle)
@@ -77,9 +77,7 @@ class Player {
         if (this.inAir) return
         if (comets[this.joint] instanceof Comet) {
             //launch comet away
-            comets[this.joint].launch(this.angle - Math.PI, this.launchSpeed)
-            this.score+=1
-            score.innerHTML=this.score
+            comets[this.joint].launch(this.angle - Math.PI, this.launchSpeed)            
         }
         this.lastJoint=this.joint
         this.inAir = true
@@ -109,6 +107,10 @@ class Player {
             start()
         }
         
+    }
+    updateScore(){
+        this.score++
+        score.innerHTML=this.score
     }
 
 }
