@@ -15,8 +15,26 @@ class Planet {
                         Math.floor(25 + 70 * Math.random()) + '%,' +
                         Math.floor(65 + 10 * Math.random()) + '%)')
             }))
-        scene.add(this.mesh)
-    }
+            
+            scene.add(this.mesh)
+
+            var curve = new THREE.EllipseCurve(
+                width/2,  height/2,            // ax, aY
+                this.amp, this.amp,           // xRadius, yRadius
+                0,  2 * Math.PI,  // aStartAngle, aEndAngle
+                false,            // aClockwise
+                0                 // aRotation
+            );
+            
+            var points = curve.getPoints( 50 );
+            var geometry = new THREE.BufferGeometry().setFromPoints( points );
+            
+            var material = new THREE.LineBasicMaterial( { color : 0xffafca } );
+            
+            // Create the final object to add to the scene
+            var ellipse = new THREE.Line( geometry, material );
+            scene.add(ellipse)
+        }
     update() {
         this.phase += this.speed
 

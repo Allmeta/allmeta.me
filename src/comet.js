@@ -20,6 +20,10 @@ class Comet {
         this.size = Math.random() * 30 + 30
 
         trails[this.index]={}
+        this.trailInterval=setInterval(()=>{
+            let k=ID();
+            trails[this.index][k]=new Trail(this,k)
+        },120)
 
         this.mesh = new THREE.Mesh(new THREE.CircleGeometry(this.size, 5),
             new THREE.MeshBasicMaterial({
@@ -48,8 +52,6 @@ class Comet {
             this.kill()
             player.updateScore()
         }        
-        let k=ID();
-        trails[this.index][k]=new Trail(this,k)
 
         this.mesh.position.set(this.x, this.y, 0)
     }
@@ -61,6 +63,7 @@ class Comet {
         this.angle=Math.atan2(this.vy,this.vx)
     }
     kill(){
+        clearInterval(this.trailInterval)
         delete comets[this.index]
         scene.remove(this.mesh)
     }
@@ -79,7 +82,7 @@ class Trail{
         this.vx=this.speed*Math.cos(this.angle)
         this.vy=this.speed*Math.sin(this.angle)
 
-        this.size = Math.random() * 10+5
+        this.size = Math.random() * comet.size/2+comet.size/10
 
         this.mesh = new THREE.Mesh(new THREE.CircleGeometry(this.size, 3),
             new THREE.MeshBasicMaterial({
@@ -95,7 +98,7 @@ class Trail{
         this.x+=this.vx
         this.y+=this.vy
 
-        this.mesh.rotateZ(this.mesh.material.opacity*Math.PI)
+        this.mesh.rotation.set(0, 0, this.mesh.material.opacity*Math.PI)
 
         this.mesh.material.opacity-=this.speed/200
         if(this.mesh.material.opacity<=0){

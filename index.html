@@ -22,52 +22,48 @@
         #score{
             font-family: 'Indie Flower';
             position: fixed;
-            bottom: 50px;
+            top: 20px;
             right:200px;
-            font-size:500%;
-            z-index:3;
-            color:pink;
-            text-align: center;
-            
-            transition:right 1s, bottom 1s;
-        }
-        .done{
-            bottom:50vh;
-            right:25vw;
             font-size:300%;
-            font-family: "Amatic SC";
+            z-index:3;
+            color:tomato;          
         }
-        #restart{
-            font-family: "Amatic SC";
-            background:peachpuff;
-            color:teal;
-            border-radius:50%;
-            border:none;
-            transition: border-radius .5s,box-shadow .5s,font-size .5s, transform .5s;
-            box-shadow: 0px 0px 0px black;
+        #jumps{
+            font-family: 'Indie Flower';
             position: fixed;
-            font-size:500%;
-            left:45vw;
-            top:50vh;
-            transform:rotateY(0);
+            top: 20px;
+            left:200px;
+            font-size:300%;
+            z-index:3;
+            color:tomato;
 
         }
-        #restart:hover{
-            cursor:pointer;
-            border-radius:35%;
-            box-shadow: 0px 0px 30px black;
-            transform:rotateY(360deg);
+        #end{
+            font-family:"Amatic SC";
+            font-size:300%;
+            top:50vh;
+            left:50vw;
+            position: fixed;
+            color:snow;
+            width:42ch;
+            margin-left:-21ch;
+            text-align:center;
+
+        }
+        #end > span{
+            color:tomato;
         }
     </style>
     <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
     <script>
-        let width, height, scene, camera, renderer, Key, Mouse,score,gameOver,cometTimeout,deaths;
+        let width, height, scene, camera, renderer, Key, Mouse,score,jumps,gameOver,cometTimeout,deaths;
         let hole, comets, planets, player,trails;
     </script>
 </head>
 
 <body>
-    <h1 id="score">0</h1>
+    <h1 id="score"></h1>
+    <h1 id="jumps"></h1>
 </body>
 <script src="src/util.js"></script>
 <script src="src/player.js"></script>

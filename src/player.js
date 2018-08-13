@@ -17,6 +17,7 @@ class Player {
 
         this.angle = 0
         this.inAir = false
+        this.jumps=1
 
         this.score=0
 
@@ -55,6 +56,9 @@ class Player {
                     this.vx = 0
                     this.vy = 0
                     this.joint = i
+
+                    this.jumps++
+                    this.updateJumps()
                 }
             }
             for (let i in comets) {
@@ -64,6 +68,9 @@ class Player {
                     this.vx = 0
                     this.vy = 0
                     this.joint = i
+
+                    this.jumps++
+                    this.updateJumps()
                 }
             }
             if((outOfBounds(this))){
@@ -74,13 +81,18 @@ class Player {
 
     }
     launch() {
-        if (this.inAir) return
+        if (this.jumps<=0) return
         if (comets[this.joint] instanceof Comet) {
             //launch comet away
             comets[this.joint].launch(this.angle - Math.PI, this.launchSpeed)            
         }
+
+        this.jumps--
+        this.updateJumps()
+
         this.lastJoint=this.joint
         this.inAir = true
+
         this.vx = Math.cos(this.angle) * this.launchSpeed
         this.vy = Math.sin(this.angle) * this.launchSpeed
         this.ax=Math.cos(this.angle)*0.1
@@ -89,28 +101,26 @@ class Player {
     }
     gameOver(){
         deaths++
+        clearTimeout(cometTimeout)
+        
+        let end=document.createElement("div");
+        end.id="end"
+        end.innerHTML="You protected the planets against <span>xd</span> comets!\n Press <span>SPACE</span> to try again!".replace("xd",player.score)
+        score.innerHTML=""
+        jumps.innerHTML=""
+        document.body.appendChild(end)
         gameOver=true
         scene.remove(this.mesh)
         player=null
-        clearTimeout(cometTimeout)
-        score.className="done"
-        score.innerHTML="You saved %c% comets before flying into the void.".replace("%c%",this.score)
-
-        let btn=document.createElement("button");
-        btn.innerHTML="Retry?"
-        btn.id="restart"
-        document.body.appendChild(btn)
-        btn.onclick=()=>{
-            score.className=""
-            document.body.removeChild(btn)
-            score.innerHTML="0"
-            start()
-        }
+        
         
     }
     updateScore(){
         this.score++
-        score.innerHTML=this.score
+        score.innerHTML="Score: "+this.score
+    }
+    updateJumps(){
+        jumps.innerHTML="Jumps: "+this.jumps
     }
 
 }

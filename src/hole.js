@@ -17,7 +17,7 @@ class Hole {
         this.mesh.rotateZ(this.it)
     }
     eat(comet) {        
-        this.size += Math.sqrt(comet.size / Math.PI)
+        this.size += Math.sqrt(comet.size)
         comet.kill()
         this.mesh.scale.set(this.size / this.firstSize, this.size / this.firstSize, 1)
         if(player && player.joint==comet.index){            

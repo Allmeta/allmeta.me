@@ -8,6 +8,7 @@ function init() {
     camera.up = new THREE.Vector3(0, 0, -1);
 
     score = document.getElementById("score")
+    jumps = document.getElementById("jumps")
     deaths = 0
 
     //webgl INIT
@@ -33,7 +34,11 @@ function init() {
         onKeydown: function (event) {
             this._pressed[event.keyCode] = true;
             if (this.isDown(this.SPACE)) {
-                player.launch()
+                if(!gameOver) player.launch()
+                else{
+                    document.body.removeChild(document.getElementById("end"))
+                    start()
+                }
             }
         },
 
@@ -50,6 +55,8 @@ function init() {
 }
 function start() {
     gameOver = false
+    score.innerHTML="Score: 0"
+    jumps.innerHTML="Jumps: 1"
 
     planets = []
     comets = {}
