@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#grid {
+    display: grid;
+    grid-template-rows: 100px calc(100vh - 100px) 100vh;
+    height: 200vh;
+    width: 100vw;
+}
+
+#header {
+    position: relative;
+    grid-row: 1;
+    overflow: hidden;
+    background-color: #192227;
+    color: white;
+    padding-left: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+#body {
+    position: relative;
+    grid-row:2;
+    background: #263238;
+}
+
+#documentation {
+    position: relative;
+    border-top:1px solid black;
+    grid-row: 3;
+    background:#192227;
+    color:white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.range {
+    width: 200px;
+}
+#docButton{
+    position: absolute;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    box-shadow: 8px 8px 16px 0px rgba(0,0,0,.2);
+    background:#192227;
+    text-align: center;
+    font-size: 40px;
+    left: calc(50% - 25px);
+    bottom:10px;
+
+    animation: db 1s ease-in-out infinite;
+    
+}
+#backButton{
+    position: absolute;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+    box-shadow: 8px 8px 16px 0px rgba(0,0,0,.2);
+    background:#192227;
+    text-align: center;
+    font-size: 40px;
+    left: calc(50% - 25px);
+    top:10px;
+    animation: dt 1s ease-in-out infinite;
+    
+}
+@keyframes db{
+    0% {bottom:10px;}
+    50% {bottom:0;}
+    100% {bottom:10px;}
+}
+@keyframes dt{
+    0% {top:10px;}
+    50% {top:0;}
+    100% {top:10px;}
+}
+#docButton:hover,#backButton:hover{
+    cursor: pointer;
+}
+#docButton i,#backButton i{
+    vertical-align: middle;
+    line-height:50px;
+    color:hsl(345,100%,40%);
+}
+.center{
+    text-align:center;
+}
+.center>h1{
+    font-size:30px;
+}
+.text{
+    font-size:18px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding:30px;
+    width:150ch;
+}
