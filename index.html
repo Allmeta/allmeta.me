@@ -32,7 +32,7 @@
         check = document.getElementById("check");
 
     function func() {
-        if (input.value == g - output.innerHTML) {
+        if (Number(input.value).toFixed(2) == Number(g - output.innerHTML).toFixed(2)) {
             check.innerHTML = "✔"
         } else {
             check.innerHTML = "❌"
