@@ -1,185 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <title>WebDev Assignment 1</title>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Nice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" href="range.css">
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 
 <body>
-    <div id="grid">
-        <div id="header" class="navbar">
-            <div class="dropdown">
-                <button class="dropbtn">Color
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <div>
-                        <input type="range" name="" id="color" value="345" min="0" max="360" class="range" oninput="updateRangeInput(this)">
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn">Size
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <div>
-                        <input type="range" name="" id="size" value="8" min="1" max="32" class="range" oninput="updateRangeInput(this)">
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-            <h1 id="title"><strong>"Smoke"</strong> by <strong>All Meta</strong></h1>
-            <div class="dropdown">
-                <button class="dropbtn">Vertices
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <div>
-                        <input type="range" name="" id="vertices" value="4" min="3" max="8" class="range" oninput="updateRangeInput(this)">
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn">Spread
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <div>
-                        <input type="range" name="" id="spread" value="1" min="0.3" max="3" step=".1" class="range" oninput="updateRangeInput(this)">
-                        <span></span>
-                    </div>
-                </div>
-            </div>
+    <div id="container">
+        <div id="change" onclick="bytt()">Trykk for å bytte shit ty</div>
+        <div id="text">
+            <span id="output"></span>
+            <span>av </span>
+            <span id="o"></span>
         </div>
-        <div id="body">
-            <div id="docButton"><i class="fa fa-arrow-down"></i></div>
+        <div id="check"></div>
+        <div>
+            <input type="number" id="in" step='0.1' oninput="func()">
         </div>
-        <div id="documentation">
-            <div style="height:50px;"></div>
-            <div class="center">
-                <h1>Documentation</h1>
-
-            </div>
-            <div id="pad">
-
-                <div class="text">
-                    Grid og flexbox har mange like egneskaper, men de gjør ikke helt det samme. Hovedforskjellen er at Flexbox er lagd for en-dimensjonale
-                    layout sånn som en navigation bar e.l. Mens Grid er lagd for to-dimensjonale layouts. Felxbox har noen
-                    verktøy som auto-alignment som ikke grid har, som gjør at den ikke blir erstattet helt. I dene løsningen
-                    valgte jegå bruke grid, men jeg kunne godt bruke flexbox til det samme. Når man driver med canvas fungerer
-                    det også veldig dårlig å skalere ting, så jeg måtte ha en egen funksjon for å skalere canvas.
-                </div>
-                <div class="text">canvas er veldig lett å sette opp, og bruker piksel-basert grafikk. mens SVG bruker vektor-basert
-                    grafikk og egner seg best for oppgaver som dette fordi man kan manipulere elementene rett fra DOM-en.
-                    Jeg ville benytte meg av verktøyene i THREE libraryet, så da måtte jeg bruke canvas.</div>
-                <div class="text">jQuery har en rekke hjelpefunksjoner og gjør noe kode lettere å skrive. Det er relevant
-                    for oppgaven fordi man hele tiden benytter seg av at elementer endrer seg, og det er lett å binde events
-                    til funksjoner man kan benytte seg av i feks. canvas.</div>
-                <div class="text">Cross-browser testing er veldig viktig på grunn av de mange ulike browsere, operativsystemer
-                    og enheter som finnes i dag. Hensikten er å få en konsistent brukeropplevelse på de fleste browsere.
-                    For å teste min nettside har jeg brukt chrome og firefox, som er bygget på helt forskjellige engines,
-                    og lekt litt rundt med koden og prøvd å finne feil. Det finnes også verktøy for dette.</div>
-                <div class="text">Informasjonskilder: W3School, Stackoverflow, Threejs.org</div>
-                <div class="text">Kilder: https://www.w3schools.com/howto/howto_css_dropdown_navbar.asp</div>
-            </div>
-            <div id="backButton" class="hide"><i class="fa fa-arrow-up"></i></div>
-        </div>
+        <div id="next" onclick="gen()">Neste</div>
     </div>
-
-
 </body>
 <script>
-    let width, height, windowHeight, tanFOV, particles, scene, camera, renderer, color, size, spread, vertices, geometry;
-    function myFunction(a) {
-        a.classList.toggle("change");
-        $("#sidebar").toggleClass("show")
-        $("#grid").toggleClass("show")
-        windowResize()
+    let g = 120,
+        input = document.getElementById("in"),
+        output = document.getElementById("output"),
+        o = document.getElementById("o"),
+        check = document.getElementById("check");
 
-    }
-    $("#docButton").on("click", () => {
-        $('#documentation')[0].scrollIntoView({ behavior: 'smooth', block: 'center' })
-        $("#docButton").css("display", "none")
-        $("#backButton").css("display", "block")
-    })
-    $("#backButton").on("click", () => {
-        $('#header')[0].scrollIntoView({ behavior: 'smooth', block: 'center' })
-        $("#docButton").css("display", "block")
-        $("#backButton").css("display", "none")
-
-    })
-    $("input[type=range]").each((index, element) => { updateRangeInput(element) })
-    function updateRangeInput(elem) {
-        $(elem).next().text($(elem).val());
-        let min = $(elem).attr("min"),
-            max = $(elem).attr("max"),
-            val = $(elem).val();
-        $(elem).next().css("left", (195 - 10) * (val - min) / (max - min) + "px")
-
-    }
-    //Slider events
-    $("#color").on("change", () => {
-        color = "hsl(%c,100%,40%)".replace("%c", $("#color").val())
-        $("#docButton > i").css("color", color)
-        $("#backButton > i").css("color", color)
-        $("strong").css("color", color)
-        particles.forEach(o => o.object.material.color = new THREE.Color(color))
-    })
-    $("#size").on("change", () => {
-        size = parseFloat($("#size").val())
-        geometry = new THREE.CircleGeometry(size, vertices)
-        for (let o of particles) {
-            scene.remove(o.object)
-            o.object = new THREE.Mesh(geometry, o.object.material)
-            scene.add(o.object)
+    function func() {
+        if (input.value == g - output.innerHTML) {
+            check.innerHTML = "✔"
+        } else {
+            check.innerHTML = "❌"
         }
-    })
-    $("#vertices").on("change", () => {
-        vertices = parseFloat($("#vertices").val())
-        geometry = new THREE.CircleGeometry(size, vertices)
-        for (let o of particles) {
-            scene.remove(o.object)
-            o.object = new THREE.Mesh(geometry,
-                o.object.material)
-            scene.add(o.object)
-        }
-    })
-    $("#spread").on("change", () => {
-        spread = parseFloat($("#spread").val())
-        particles.forEach(o => o.pending = true)
-    })
-
-    $(window).resize(windowResize)
-    function windowResize() {
-        width = window.innerWidth
-        height = $(window).height() - 100
-
-        camera.left = -width / 2
-        camera.right = width / 2
-        camera.top = height / 2
-        camera.bottom = -height / 2
-
-        camera.position.set(0, height / 2, 100)
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(width, height);
     }
-
+    function bytt() {
+        g = g == 120 ? 240 : 120
+        gen()
+    }
+    function gen() {
+        let i = (Math.random() * (g - g / 10) + g / 10).toFixed(1)
+        output.innerHTML = i
+        o.innerHTML = g
+        check.innerHTML = ""
+        input.value = ""
+    }
+    gen()
 </script>
-<script src="particles.js"></script>
 
 </html>
