@@ -1,55 +1,75 @@
 <!DOCTYPE html>
-<html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Nice</title>
+    <title>I Can Fly in The Universe</title>
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Indie+Flower" rel="stylesheet"> 
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+
+            transform: scaleY(-1);
+        }
+
+        #score{
+            font-family: 'Indie Flower';
+            position: fixed;
+            top: 20px;
+            right:200px;
+            font-size:300%;
+            z-index:3;
+            color:tomato;          
+        }
+        #jumps{
+            font-family: 'Indie Flower';
+            position: fixed;
+            top: 20px;
+            left:200px;
+            font-size:300%;
+            z-index:3;
+            color:tomato;
+
+        }
+        #end{
+            font-family:"Amatic SC";
+            font-size:300%;
+            top:50vh;
+            left:50vw;
+            position: fixed;
+            color:snow;
+            width:42ch;
+            margin-left:-21ch;
+            text-align:center;
+
+        }
+        #end > span{
+            color:tomato;
+        }
+    </style>
+    <script type="text/javascript" src="https://threejs.org/build/three.min.js"></script>
+    <script>
+        let width, height, scene, camera, renderer, Key, Mouse,score,jumps,gameOver,cometTimeout,deaths;
+        let hole, comets, planets, player,trails;
+    </script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="change" onclick="bytt()">Trykk for å bytte shit ty</div>
-        <div id="text">
-            <span id="output"></span>
-            <span>av </span>
-            <span id="o"></span>
-        </div>
-        <div id="check"></div>
-        <div>
-            <input type="number" id="in" step='0.1' oninput="func()">
-        </div>
-        <div id="next" onclick="gen()">Neste</div>
-    </div>
+    <h1 id="score"></h1>
+    <h1 id="jumps"></h1>
 </body>
-<script>
-    let g = 120,
-        input = document.getElementById("in"),
-        output = document.getElementById("output"),
-        o = document.getElementById("o"),
-        check = document.getElementById("check");
-
-    function func() {
-        if (Number(input.value).toFixed(2) == Number(g - output.innerHTML).toFixed(2)) {
-            check.innerHTML = "✔"
-        } else {
-            check.innerHTML = "❌"
-        }
-    }
-    function bytt() {
-        g = g == 120 ? 240 : 120
-        gen()
-    }
-    function gen() {
-        let i = (Math.random() * (g - g / 10) + g / 10).toFixed(1)
-        output.innerHTML = i
-        o.innerHTML = g
-        check.innerHTML = ""
-        input.value = ""
-    }
-    gen()
-</script>
+<script src="src/util.js"></script>
+<script src="src/player.js"></script>
+<script src="src/planet.js"></script>
+<script src="src/hole.js"></script>
+<script src="src/comet.js"></script>
+<script src="src/main.js"></script>
 
 </html>
