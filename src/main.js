@@ -57,6 +57,8 @@ function start() {
     gameOver = false
     score.innerHTML="Score: 0"
     jumps.innerHTML="Jumps: 1"
+    
+    comets && Object.values(comets).forEach(x=> x.kill())
 
     planets = []
     comets = {}
